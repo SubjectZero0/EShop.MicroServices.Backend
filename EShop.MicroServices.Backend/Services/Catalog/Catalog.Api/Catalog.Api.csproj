@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Carter" Version="8.2.0" />
+    <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Marten" Version="7.18.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -18,5 +19,4 @@
     <ProjectReference Include="..\..\..\Services.Shared\Services.Shared\Services.Shared.csproj" />
     <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
   </ItemGroup>
-
 </Project>

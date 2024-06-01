@@ -9,9 +9,14 @@ namespace Catalog.Api.Features.Products
 	{
 		private void AddCreateProductEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapPost("/products/create", async ([FromBody] CreateProduct request, ISender sender) =>
+			app.MapPost("/products/create", async ([FromBody] CreateProduct request) =>
 			{
-				await sender.Send(request);
+				await _mediator.Send(new CreateProduct(
+					Name: request.Name,
+					Description: request.Description,
+					ImageFile: request.ImageFile,
+					Price: request.Price,
+					Categories: request.Categories));
 
 				return Results.Created();
 			})

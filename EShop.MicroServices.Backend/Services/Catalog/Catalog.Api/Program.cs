@@ -3,14 +3,16 @@ using Catalog.Api;
 using Services.Shared.Middleware.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args)
+	.AddAppSettings()
 	.AddMiddleware()
-	.AddMediator()
 	.AddValidators()
+	.AddMediator()
 	.AddCarterEndpoints();
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddLogging();
 
 // Build app.
 var app = builder.Build();

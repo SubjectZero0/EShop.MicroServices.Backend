@@ -1,5 +1,5 @@
-﻿using Catalog.Api.Features.Products;
-using FluentValidation;
+﻿using MediatR;
+using Services.Shared.Decorators;
 using System.Reflection;
 
 namespace Catalog.Api
@@ -12,6 +12,8 @@ namespace Catalog.Api
 			{
 				config.RegisterServicesFromAssembly(assembly: Assembly.GetExecutingAssembly());
 			});
+
+			builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationDecorator<,>));
 
 			return builder;
 		}

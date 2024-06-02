@@ -1,7 +1,5 @@
-﻿using Catalog.Api.Features.Products;
-using FluentValidation;
-using MediatR;
-using Services.Shared.Decorators;
+﻿using FluentValidation;
+using System.Reflection;
 
 namespace Catalog.Api
 {
@@ -9,8 +7,8 @@ namespace Catalog.Api
 	{
 		public static WebApplicationBuilder AddValidators(this WebApplicationBuilder builder)
 		{
-			builder.Services.AddSingleton<IValidator<CreateProduct>, CreateProductValidator>();
-			builder.Services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationDecorator<,>));
+			builder.Services.AddValidatorsFromAssembly(assembly: Assembly.GetExecutingAssembly(), lifetime: ServiceLifetime.Transient);
+
 			return builder;
 		}
 	}

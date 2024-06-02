@@ -23,7 +23,8 @@ namespace Catalog.Api
 				cfg.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.CreateOrUpdate;
 				cfg.UseSystemTextJsonForSerialization();
 
-				cfg.Schema.For<Product>().Duplicate(product => product.Categories, "varchar(max)");
+				cfg.Schema.For<Product>().Identity(product => product.Id);
+				//TODO: find a way to index categories
 				cfg.Schema.For<Product>().Duplicate(product => product.Name, "varchar(255)");
 			})
 			.UseLightweightSessions();

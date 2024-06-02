@@ -24,7 +24,7 @@ namespace Catalog.Api.Features.Products
 				categories: request.Categories);
 
 			_dbSession.Store(newProduct);
-			await _dbSession.SaveChangesAsync();
+			await _dbSession.SaveChangesAsync(cancellationToken);
 
 			return Unit.Value;
 		}

@@ -1,5 +1,4 @@
 ﻿using Carter;
-using Catalog.Api.Features.Products.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +8,9 @@ namespace Catalog.Api.Features.Products
 	{
 		private void AddCreateProductEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapPost("/products/create", async ([FromBody] CreateProduct request) =>
+			app.MapPost("/products/create", async ([FromBody] CreateProduct request, ISender sender) =>
 			{
-				await _mediator.Send(new CreateProduct(
+				await sender.Send(new CreateProduct(
 					Name: request.Name,
 					Description: request.Description,
 					ImageFile: request.ImageFile,

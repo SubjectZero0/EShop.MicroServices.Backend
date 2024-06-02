@@ -12,12 +12,9 @@ namespace Catalog.Api
 			{
 				config.RegisterServicesFromAssembly(assembly: Assembly.GetExecutingAssembly());
 				config.AddOpenBehavior(typeof(ValidationDecorator<,>));
-				config.AddOpenBehavior(typeof(LoggingDecorator<,>));
 
 				config.Lifetime = ServiceLifetime.Transient;
 			});
-
-			builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationDecorator<,>));
 
 			return builder;
 		}

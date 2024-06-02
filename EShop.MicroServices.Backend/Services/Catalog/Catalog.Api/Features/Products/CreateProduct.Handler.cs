@@ -1,4 +1,5 @@
 ﻿using Catalog.Domain.Aggregates.Product;
+using Marten;
 using MediatR;
 using Services.Shared.CQRS;
 
@@ -6,6 +7,13 @@ namespace Catalog.Api.Features.Products
 {
 	internal class CreateProductHandler : ICommandHandler<CreateProduct, Unit>
 	{
+		private readonly IDocumentSession _dbSession;
+
+		public CreateProductHandler(IDocumentSession dbSession)
+		{
+			_dbSession = dbSession;
+		}
+
 		public async Task<Unit> Handle(CreateProduct request, CancellationToken cancellationToken)
 		{
 			var newProduct = Product.CreateNew(
@@ -15,7 +23,8 @@ namespace Catalog.Api.Features.Products
 				price: request.Price,
 				categories: request.Categories);
 
-			//TODO: save to db
+			_dbSession.Store(newProduct);
+			await _dbSession.SaveChangesAsync();
 
 			return Unit.Value;
 		}

@@ -11,9 +11,10 @@ namespace Catalog.Api
 			builder.Services.AddMediatR(config =>
 			{
 				config.RegisterServicesFromAssembly(assembly: Assembly.GetExecutingAssembly());
-			});
+				config.AddOpenBehavior(typeof(ValidationDecorator<,>));
 
-			builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationDecorator<,>));
+				config.Lifetime = ServiceLifetime.Transient;
+			});
 
 			return builder;
 		}

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Catalog.Api.Features.Products
+namespace Catalog.Api.Features.Products.Commands
 {
 	public class CreateProductValidator : AbstractValidator<CreateProduct>
 	{
@@ -25,7 +25,7 @@ namespace Catalog.Api.Features.Products
 				.Must(price => IsMoney(price)).WithMessage("Price must have two decimal places.");
 		}
 
-		private bool IsMoney(decimal price)
+		private static bool IsMoney(decimal price)
 		{
 			// Money has to have exactly two decimal places
 			var decimals = price.ToString().Split(',').Last();

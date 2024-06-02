@@ -1,5 +1,6 @@
 ﻿using Catalog.Domain.Aggregates.Product;
 using Marten;
+using System.Text.Json;
 using static Catalog.Api.Configuration.Configuration;
 
 namespace Catalog.Api
@@ -8,17 +9,26 @@ namespace Catalog.Api
 	{
 		public static WebApplicationBuilder AddMartenDb(this WebApplicationBuilder builder)
 		{
-			var sqlCofinguration = builder
+			var sqlConfiguration = builder
 				.Configuration
 				.GetSection(nameof(SqlConnectionConfiguration))
 				.Get<SqlConnectionConfiguration>()
 				?? throw new ArgumentNullException(nameof(SqlConnectionConfiguration));
 
+			var connectionString = sqlConfiguration.ConnectionString ?? throw new ArgumentNullException("ConnectionString");
+
 			builder.Services.AddMarten(cfg =>
 			{
-				cfg.Connection(sqlCofinguration.ConnectionString);
+				cfg.Connection(connectionString);
 				cfg.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.CreateOrUpdate;
-				cfg.UseSystemTextJsonForSerialization();
+
+				cfg.UseSystemTextJsonForSerialization(
+					options: new JsonSerializerOptions()
+					{
+						PropertyNameCaseInsensitive = true,
+						MaxDepth = 3,
+						IncludeFields = true
+					});
 
 				cfg.Schema.For<Product>().Identity(product => product.Id);
 				//TODO: find a way to index categories

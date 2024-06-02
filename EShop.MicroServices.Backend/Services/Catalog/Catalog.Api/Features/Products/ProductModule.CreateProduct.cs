@@ -1,4 +1,5 @@
 ﻿using Carter;
+using Catalog.Api.Features.Products.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

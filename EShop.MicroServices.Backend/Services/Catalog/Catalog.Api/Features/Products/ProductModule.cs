@@ -1,5 +1,4 @@
 ﻿using Carter;
-using MediatR;
 
 namespace Catalog.Api.Features.Products
 {
@@ -8,6 +7,7 @@ namespace Catalog.Api.Features.Products
 		public void AddRoutes(IEndpointRouteBuilder app)
 		{
 			AddCreateProductEndpoint(app);
+			AddSearchProductsEndpoint(app);
 		}
 	}
 }

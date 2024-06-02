@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
-    <UserSecretsId>d92a8570-499c-4f71-9fd4-22f0f3b2c891</UserSecretsId>
+    <UserSecretsId>5261d3dc-f5b7-49a7-875f-5acfcddf3fe9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

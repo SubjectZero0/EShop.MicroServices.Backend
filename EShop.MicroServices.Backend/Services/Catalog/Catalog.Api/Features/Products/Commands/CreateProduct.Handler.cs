@@ -3,7 +3,7 @@ using Marten;
 using MediatR;
 using Services.Shared.CQRS;
 
-namespace Catalog.Api.Features.Products
+namespace Catalog.Api.Features.Products.Commands
 {
 	internal class CreateProductHandler : ICommandHandler<CreateProduct, Unit>
 	{

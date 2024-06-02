@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args)
 	.AddMartenDb()
 	.AddCarterEndpoints();
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,6 +19,8 @@ builder.Services.AddLogging();
 
 // Build app.
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.UseMiddleware<ExceptionsMiddleware>();
 

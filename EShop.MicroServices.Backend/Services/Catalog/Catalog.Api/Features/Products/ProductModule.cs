@@ -1,5 +1,4 @@
 ﻿using Carter;
-using MediatR;
 
 namespace Catalog.Api.Features.Products
 {
@@ -9,8 +8,6 @@ namespace Catalog.Api.Features.Products
 		{
 			AddCreateProductEndpoint(app);
 			AddSearchProductsEndpoint(app);
-			AddUpdateProductEndpoint(app);
-			AddDeleteProductEndpoint(app);
 		}
 	}
 }

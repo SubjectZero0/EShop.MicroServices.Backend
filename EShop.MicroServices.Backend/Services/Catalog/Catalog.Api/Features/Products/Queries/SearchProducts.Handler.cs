@@ -27,7 +27,7 @@ namespace Catalog.Api.Features.Products.Queries
 				query = (Marten.Linq.IMartenQueryable<Product>)query.Where(x => x.Price == request.Price.Value);
 
 			if (request.Categories is not null && request.Categories.Length > 0)
-				query = (Marten.Linq.IMartenQueryable<Product>)query.Where(x => x.Categories.Any(_ => request.Categories.Contains(_)));
+				query = (Marten.Linq.IMartenQueryable<Product>)query.Where(x => request.Categories.All(category => x.Categories.Contains(category)));
 
 			var results = await query.ToListAsync(cancellationToken);
 

@@ -15,7 +15,6 @@ namespace Catalog.Domain.Aggregates.Product
 
 		[JsonInclude]
 		public decimal Price { get; private set; }
-		public IReadOnlyCollection<string> Categories => _categories.ToArray();
 
 		[JsonInclude]
 		public List<string> Categories { get; private set; }
@@ -38,7 +37,6 @@ namespace Catalog.Domain.Aggregates.Product
 			return new Product(
 				id: Guid.NewGuid(),
 				name: name,
-				categories: categories,
 				description: description,
 				imageFile: imageFile,
 				price: price,
@@ -54,17 +52,6 @@ namespace Catalog.Domain.Aggregates.Product
 		}
 
 		public void AddCategories(string[] newCategories)
-		{
-			foreach (var newCategory in newCategories)
-			{
-				if (Categories.Contains(newCategory))
-					continue;
-
-				Categories.Add(newCategory);
-			}
-		}
-
-		public void RemoveCategories(string[] categories)
-			=> Categories = Categories.Except(categories).ToList();
+			=> Categories.AddRange(newCategories);
 	}
 }

@@ -2,6 +2,6 @@
 {
 	public abstract class AggregateRoot<T> where T : struct
 	{
-		public T Id { get; protected set; }
+		public T Id { get; set; }
 	}
 }

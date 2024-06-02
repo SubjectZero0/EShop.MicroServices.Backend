@@ -7,24 +7,30 @@ namespace Catalog.Api.Features.Products
 		public CreateProductValidator()
 		{
 			RuleFor(x => x.Name)
-				.NotNull()
-				.NotEmpty();
+				.NotNull().WithMessage("Name cannot be null.")
+				.NotEmpty().WithMessage("Name cannot be empty")
+				.MaximumLength(255).WithMessage("Name cannot exceed 255 characters");
 
 			RuleFor(x => x.Description)
-				.MinimumLength(10)
-				.MaximumLength(150);
+				.MinimumLength(10).WithMessage("Description cannot be less than 10 characters.")
+				.MaximumLength(255).WithMessage("Description cannot exceed 255 character.");
 
 			RuleFor(x => x.Categories)
-				.NotNull()
-				.NotEmpty();
+				.NotEmpty().WithMessage("Products must have Categories.");
 
 			RuleFor(x => x.ImageFile)
-				.NotNull()
-				.NotEmpty();
+				.NotEmpty().WithMessage("Products must have an Image file.");
 
 			RuleFor(x => x.Price)
-				.NotNull()
-				.Must(x => x.ToString().Split(".").Last().Length == 2);
+				.Must(price => IsMoney(price)).WithMessage("Price must have two decimal places.");
+		}
+
+		private bool IsMoney(decimal price)
+		{
+			// Money has to have exactly two decimal places
+			var decimals = price.ToString().Split(',').Last();
+
+			return decimals.Length == 2;
 		}
 	}
 }

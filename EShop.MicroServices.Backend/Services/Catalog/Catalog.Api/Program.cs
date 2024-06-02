@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args)
 	.AddMiddleware()
 	.AddValidators()
 	.AddMediator()
-	.AddMartenDb()
 	.AddCarterEndpoints();
 
 builder.AddServiceDefaults();

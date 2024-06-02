@@ -17,6 +17,8 @@ namespace Catalog.Api
 				config.Lifetime = ServiceLifetime.Transient;
 			});
 
+			builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationDecorator<,>));
+
 			return builder;
 		}
 	}

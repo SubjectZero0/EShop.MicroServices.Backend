@@ -1,7 +1,5 @@
-﻿using Catalog.Api.Features.Products;
-using FluentValidation;
-using MediatR;
-using Services.Shared.Decorators;
+﻿using FluentValidation;
+using System.Reflection;
 
 namespace Catalog.Api
 {

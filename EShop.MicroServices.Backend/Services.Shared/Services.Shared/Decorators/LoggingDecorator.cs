@@ -10,9 +10,12 @@ namespace Services.Shared.Decorators
 		public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 		{
 			var timer = new Stopwatch();
+
 			timer.Start();
 
 			var response = await next();
+
+			timer.Stop();
 
 			if (timer.Elapsed.Seconds > 2)
 				logger.LogWarning("[PERFORMANCE ISSUE] The request {Request} took {TimeTaken} seconds.",

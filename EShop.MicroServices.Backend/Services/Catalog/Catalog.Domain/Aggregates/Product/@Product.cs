@@ -52,7 +52,15 @@ namespace Catalog.Domain.Aggregates.Product
 		}
 
 		public void AddCategories(string[] newCategories)
-			=> Categories.AddRange(newCategories);
+		{
+			foreach (var newCategory in newCategories)
+			{
+				if (Categories.Contains(newCategory))
+					continue;
+
+				Categories.Add(newCategory);
+			}
+		}
 
 		public void RemoveCategories(string[] categories)
 			=> Categories = Categories.Except(categories).ToList();

@@ -11,12 +11,7 @@ namespace Catalog.Api.Features.Products
 		{
 			app.MapPost("/products/create", async ([FromBody] CreateProduct request, ISender sender) =>
 			{
-				await sender.Send(new CreateProduct(
-					Name: request.Name,
-					Description: request.Description,
-					ImageFile: request.ImageFile,
-					Price: request.Price,
-					Categories: request.Categories));
+				await sender.Send(request);
 
 				return Results.Created();
 			})

@@ -43,15 +43,18 @@ namespace Catalog.Domain.Aggregates.Product
 				categories: categories);
 		}
 
-		public void Update(string name, string description, string imageFile, decimal price)
+		public void Update(string? name, string? description, string? imageFile, decimal? price)
 		{
-			Name = name;
-			Description = description;
-			ImageFile = imageFile;
-			Price = price;
+			Name = name ?? Name;
+			Description = description ?? Description;
+			ImageFile = imageFile ?? ImageFile;
+			Price = price ?? Price;
 		}
 
 		public void AddCategories(string[] newCategories)
 			=> Categories.AddRange(newCategories);
+
+		public void RemoveCategories(string[] categories)
+			=> Categories = Categories.Except(categories).ToList();
 	}
 }

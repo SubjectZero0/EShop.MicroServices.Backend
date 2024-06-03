@@ -8,6 +8,7 @@ namespace Catalog.Api.Features.Products
 		{
 			AddCreateProductEndpoint(app);
 			AddSearchProductsEndpoint(app);
+			AddUpdateProductEndpoint(app);
 		}
 	}
 }

@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchestration\EShop.MicroServices.ServiceDefaults\EShop.MicroServices.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\..\Services.Shared\Services.Shared\Services.Shared.csproj" />
+    <ProjectReference Include="..\Basket.Domain\Basket.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Services.Shared.CQRS;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Update
 {
 	public record UpdateProduct(
 		Guid Id,

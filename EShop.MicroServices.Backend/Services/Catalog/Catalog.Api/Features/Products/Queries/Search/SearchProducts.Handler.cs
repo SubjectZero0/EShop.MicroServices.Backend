@@ -2,7 +2,7 @@
 using Marten;
 using Services.Shared.CQRS;
 
-namespace Catalog.Api.Features.Products.Queries
+namespace Catalog.Api.Features.Products.Queries.Search
 {
 	internal class SearchProductsHandler : IQueryHandler<SearchProducts, SearchProductsEntity[]>
 	{

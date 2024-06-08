@@ -1,4 +1,4 @@
-﻿using Catalog.Api.Features.Products.Commands;
+﻿using Catalog.Api.Features.Products.Commands.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,6 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder.AddPostgres("postgres-eshop");
+var postgres = builder.AddPostgres(name: "postgres-eshop", port: 5438)
+	.WithEnvironment("POSTGRES_USER", "postgres")
+	.WithEnvironment("POSTGRES_PASSWORD", "postgres");
 
 //-------------------------------------------------------------------
 

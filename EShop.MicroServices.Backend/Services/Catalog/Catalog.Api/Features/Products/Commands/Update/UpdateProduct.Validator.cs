@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Update
 {
 	public class UpdateProductValidator : AbstractValidator<UpdateProduct>
 	{

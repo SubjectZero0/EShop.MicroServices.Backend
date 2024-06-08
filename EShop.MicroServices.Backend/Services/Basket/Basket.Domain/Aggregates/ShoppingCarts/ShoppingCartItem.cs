@@ -19,9 +19,7 @@ public class ShoppingCartItem : ValueObject
     [JsonInclude]
     public string ProductName { get; }
 
-    public ShoppingCartItem()
-    {
-    }
+    public ShoppingCartItem() { }
 
     public ShoppingCartItem(int quantity, string color, decimal price, Guid productId, string productName)
     {

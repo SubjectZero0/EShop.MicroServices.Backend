@@ -1,4 +1,5 @@
-﻿using Carter;
+﻿using Basket.Api.Features.ShoppingCarts;
+using Carter;
 
 namespace Basket.Api
 {
@@ -8,7 +9,7 @@ namespace Basket.Api
 		{
 			builder.Services.AddCarter(configurator: cfg =>
 			{
-				//cfg.WithModule<>();
+				cfg.WithModule<ShoppingCartModule>();
 			});
 
 			return builder;

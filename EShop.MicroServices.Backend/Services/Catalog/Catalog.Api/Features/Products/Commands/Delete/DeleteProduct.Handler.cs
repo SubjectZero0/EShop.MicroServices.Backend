@@ -3,7 +3,7 @@ using Marten;
 using MediatR;
 using Services.Shared.CQRS;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Delete
 {
 	internal class DeleteProductHandler : ICommandHandler<DeleteProduct, Unit>
 	{

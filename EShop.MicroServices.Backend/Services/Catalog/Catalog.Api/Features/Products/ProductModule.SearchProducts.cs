@@ -1,4 +1,4 @@
-﻿using Catalog.Api.Features.Products.Queries;
+﻿using Catalog.Api.Features.Products.Queries.Search;
 using MediatR;
 
 namespace Catalog.Api.Features.Products

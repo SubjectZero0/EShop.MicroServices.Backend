@@ -1,10 +1,10 @@
-﻿using Catalog.Domain.Aggregates.Product;
+﻿using System.Text.Json;
+using Catalog.Domain.Aggregates.Product;
 using Marten;
 using MediatR;
 using Services.Shared.CQRS;
-using System.Text.Json;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Update
 {
 	internal class UpdateProductHandler : ICommandHandler<UpdateProduct, Unit>
 	{

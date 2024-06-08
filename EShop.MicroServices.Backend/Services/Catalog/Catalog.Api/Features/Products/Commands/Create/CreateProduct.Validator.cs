@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Create
 {
 	public class CreateProductValidator : AbstractValidator<CreateProduct>
 	{
@@ -28,7 +28,11 @@ namespace Catalog.Api.Features.Products.Commands
 		private static bool IsMoney(decimal price)
 		{
 			// Money has to have exactly two decimal places
-			var decimals = price.ToString().Split(',').Last();
+			var extractedDecimals = price.ToString().Split(',').Last();
+			
+			var decimals = extractedDecimals == price.ToString() 
+				? price.ToString().Split('.').Last()
+				: extractedDecimals;
 
 			return decimals.Length == 2;
 		}

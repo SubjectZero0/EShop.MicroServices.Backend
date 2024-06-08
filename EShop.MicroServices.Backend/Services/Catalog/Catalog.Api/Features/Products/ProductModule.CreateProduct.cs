@@ -1,11 +1,10 @@
-﻿using Carter;
-using Catalog.Api.Features.Products.Commands.Create;
+﻿using Catalog.Api.Features.Products.Commands.Create;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Api.Features.Products
 {
-	internal partial class ProductModule : ICarterModule
+	internal partial class ProductModule
 	{
 		private void AddCreateProductEndpoint(IEndpointRouteBuilder app)
 		{

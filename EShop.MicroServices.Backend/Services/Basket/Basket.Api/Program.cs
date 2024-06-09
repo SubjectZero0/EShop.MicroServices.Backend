@@ -5,12 +5,14 @@ using Services.Shared.Middleware.Exceptions;
 var builder = WebApplication.CreateBuilder(args)
 	.AddAppSettings()
 	.AddMiddleware()
+	.AddMartenDb()
+	.AddRedisCache()
 	.AddValidators()
 	.AddMediator()
-	.AddMartenDb()
 	.AddCarterEndpoints();
 
 builder.AddServiceDefaults();
+
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();

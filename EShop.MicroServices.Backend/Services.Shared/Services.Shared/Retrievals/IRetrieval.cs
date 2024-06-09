@@ -1,7 +1,7 @@
 namespace Services.Shared.Retrievals;
 
-public interface IRetrieval<in T, out TEntity> where TEntity: class
+public interface IRetrieval<T, TEntity> where TEntity: notnull
 {
-    TEntity? TryRetrieve(T searchParameter);
-    TEntity[] RetrieveBatch(T[] searchParameters);
+    Task<TEntity> TryRetrieve(T searchParameter);
+    Task<TEntity> RetrieveBatch(T[] searchParameters);
 }

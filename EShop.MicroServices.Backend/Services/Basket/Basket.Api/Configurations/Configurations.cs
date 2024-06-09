@@ -6,5 +6,10 @@
 		{
 			public string? ConnectionString { get; init; }
 		}
+		
+		public class RedisCacheConfiguration
+		{
+			public string? ConnectionString { get; init; }
+		}
 	}
 }

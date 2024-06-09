@@ -1,6 +1,5 @@
-﻿using MediatR;
+﻿using System.Reflection;
 using Services.Shared.Decorators;
-using System.Reflection;
 
 namespace Catalog.Api
 {

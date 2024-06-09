@@ -1,17 +1,18 @@
+using Basket.Api.Services;
 using Basket.Domain.Aggregates.ShoppingCarts;
-using Marten;
 using MediatR;
 using Services.Shared.CQRS;
+using Services.Shared.Storage;
 
 namespace Basket.Api.Features.ShoppingCarts.Commands.Create;
 
 internal class CreateShoppingCartHandler : ICommandHandler<CreateShoppingCart, Unit>
 {
-    private readonly IDocumentSession _session;
+    private readonly IStorage<ShoppingCart> _storage;
 
-    public CreateShoppingCartHandler(IDocumentSession session)
+    public CreateShoppingCartHandler(IStorage<ShoppingCart> storage)
     {
-        _session = session;
+        _storage = storage;
     }
 
     public async Task<Unit> Handle(CreateShoppingCart request, CancellationToken cancellationToken)
@@ -20,9 +21,8 @@ internal class CreateShoppingCartHandler : ICommandHandler<CreateShoppingCart, U
             userName: request.UserName,
             items: new List<ShoppingCartItem>(),
             timeStamp: DateTime.UtcNow);
-        
-        _session.Store(newEmptyShoppingCart);
-        await _session.SaveChangesAsync(cancellationToken);
+
+        await _storage.Store(newEmptyShoppingCart);
 
         return Unit.Value;
     }

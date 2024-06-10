@@ -9,7 +9,9 @@
 		
 		public class RedisCacheConfiguration
 		{
-			public string? ConnectionString { get; init; }
+			public string Host { get; init; }
+			public string Port { get; init; }
+			public string ConnectionString { get; init; }
 		}
 	}
 }

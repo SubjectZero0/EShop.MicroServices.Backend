@@ -1,8 +1,9 @@
+using Marten;
 using StackExchange.Redis;
 
 namespace Basket.Api.Services;
 
-public class RedisKeyScanner
+internal class RedisKeyScanner
 {
     private readonly IDatabase _redisDatabase;
 
@@ -21,10 +22,10 @@ public class RedisKeyScanner
         // Retrieve values for matched keys
         foreach (var key in redisKeys)
         {
-            var redisValue = await _redisDatabase.StringGetAsync(key);
+            var hashSets = await _redisDatabase.HashGetAllAsync(key);
+            var redisValue = hashSets.First().Value;
             
-            if (!redisValue.IsNull)
-                redisValues.Add(redisValue.ToString());
+            redisValues.Add(redisValue.ToString());
         }
 
         return redisValues.ToArray();

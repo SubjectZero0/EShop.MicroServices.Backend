@@ -1,4 +1,3 @@
-using Basket.Api.Services;
 using Basket.Domain.Aggregates.ShoppingCarts;
 using MediatR;
 using Services.Shared.CQRS;
@@ -18,6 +17,7 @@ internal class CreateShoppingCartHandler : ICommandHandler<CreateShoppingCart, U
     public async Task<Unit> Handle(CreateShoppingCart request, CancellationToken cancellationToken)
     {
         var newEmptyShoppingCart = ShoppingCart.CreateNew(
+            id: request.Id ?? Guid.NewGuid(),
             userName: request.UserName,
             items: new List<ShoppingCartItem>(),
             timeStamp: DateTime.UtcNow);

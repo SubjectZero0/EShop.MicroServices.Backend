@@ -29,10 +29,10 @@ public class ShoppingCart : AggregateRoot<Guid>
         UpdatedAt = timeStamp;
     }
 
-    public static ShoppingCart CreateNew(string userName, List<ShoppingCartItem> items, DateTime timeStamp)
+    public static ShoppingCart CreateNew(Guid id, string userName, List<ShoppingCartItem> items, DateTime timeStamp)
     {
         return new ShoppingCart(
-            id: Guid.NewGuid(),
+            id: id,
             userName: userName,
             items: items,
             timeStamp: timeStamp);

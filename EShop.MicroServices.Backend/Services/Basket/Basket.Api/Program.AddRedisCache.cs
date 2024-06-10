@@ -18,17 +18,18 @@ public static partial class Program
         
         builder.Services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = redisCacheConfiguration.ConnectionString;
+            // options.Configuration = redisCacheConfiguration.ConnectionString;
             //options.InstanceName = "Basket";
             options.ConfigurationOptions = new ConfigurationOptions()
             {
+                EndPoints = {redisCacheConfiguration.Host, redisCacheConfiguration.Port},
                 AllowAdmin = true
             };
         });
         
         builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
-            var configuration = ConfigurationOptions.Parse(redisCacheConfiguration.ConnectionString!, true);
+            var configuration = ConfigurationOptions.Parse(redisCacheConfiguration.ConnectionString, true);
             configuration.AllowAdmin = true;
             
             var redis =  ConnectionMultiplexer.Connect(configuration);

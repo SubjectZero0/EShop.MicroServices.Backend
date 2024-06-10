@@ -23,11 +23,8 @@ internal class SearchShoppingCartHandler : IQueryHandler<SearchShoppingCart, Sho
 
     private static ShoppingCartEntity? TryGetCartEntity(SearchShoppingCart request, ShoppingCartEntity[] cartEntities)
     {
-        return request.UserName switch
-        {
-            UserNames.DefaultUser when request.Id is null => null,
-            UserNames.DefaultUser when request.Id is not null => cartEntities.FirstOrDefault(x => x.Id == request.Id),
-            _ => cartEntities.FirstOrDefault()
-        };
+        return request.UserName == UserNames.DefaultUser
+            ? cartEntities.FirstOrDefault(x => x.Id == request.Id)
+            : cartEntities.FirstOrDefault();
     }
 }

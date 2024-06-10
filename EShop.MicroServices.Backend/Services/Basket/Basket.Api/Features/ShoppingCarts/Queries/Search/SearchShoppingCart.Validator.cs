@@ -1,3 +1,4 @@
+using Basket.Api.Constants;
 using FluentValidation;
 
 namespace Basket.Api.Features.ShoppingCarts.Queries.Search;
@@ -12,7 +13,9 @@ public class SearchShoppingCartValidator : AbstractValidator<SearchShoppingCart>
             .MaximumLength(255).WithMessage("UserName cannot exceed 255 characters");
 
         RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("If Shopping cart Id is not nul, then it cannot be empty")
-            .When(x => x.Id is not null);
+            .NotEmpty().WithMessage("If Shopping cart UserName is DefaultUser, Id it cannot be empty")
+            .When(x => x.UserName == UserNames.DefaultUser)
+            .NotNull().WithMessage("If Shopping cart UserName is DefaultUser, Id it cannot be null")
+            .When(x => x.UserName == UserNames.DefaultUser);
     }
 }

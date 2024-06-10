@@ -16,7 +16,7 @@ internal partial class ShoppingCartModule
                 if (existingCart is not null) 
                     return Results.Ok();
                 
-                await sender.Send(new CreateShoppingCart(request.UserName));
+                await sender.Send(new CreateShoppingCart(request.UserName, request.Id));
                 return Results.Created();
             })
             .WithName("CreateShoppingCart")

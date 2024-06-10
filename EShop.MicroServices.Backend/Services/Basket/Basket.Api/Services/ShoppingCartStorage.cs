@@ -6,7 +6,7 @@ using Services.Shared.Storage;
 
 namespace Basket.Api.Services;
 
-public class ShoppingCartStorage : IStorage<ShoppingCart>
+internal class ShoppingCartStorage : IStorage<ShoppingCart>
 {
     private readonly IDistributedCache _cache;
     private readonly IDocumentSession _session;
@@ -20,20 +20,22 @@ public class ShoppingCartStorage : IStorage<ShoppingCart>
     public async Task Store(ShoppingCart entity)
     {
         var compositeKey = entity.UserName + "-" + $"{entity.Id}";
+        var value = JsonSerializer.Serialize(entity);
         
         _session.Store(entity);
         await _session.SaveChangesAsync();
 
-        await _cache.SetStringAsync(compositeKey, JsonSerializer.Serialize(entity));
+        await _cache.SetStringAsync(compositeKey, value);
     }
 
     public async Task StoreUpdate(ShoppingCart entity)
     {
         var compositeKey = entity.UserName + "-" + $"{entity.Id}";
+        var value = JsonSerializer.Serialize(entity);
         
         _session.Update(entity);
         await _session.SaveChangesAsync();
 
-        await _cache.SetStringAsync(compositeKey, JsonSerializer.Serialize(entity));
+        await _cache.SetStringAsync(compositeKey, value);
     }
 }

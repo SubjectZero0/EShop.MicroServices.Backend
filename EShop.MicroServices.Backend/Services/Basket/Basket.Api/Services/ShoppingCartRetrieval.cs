@@ -9,7 +9,7 @@ using StackExchange.Redis;
 
 namespace Basket.Api.Services;
 
-public class ShoppingCartRetrieval : IRetrieval<string, ShoppingCartEntity[]>
+internal class ShoppingCartRetrieval : IRetrieval<string, ShoppingCartEntity[]>
 {
     private readonly IDistributedCache _cache;
     private readonly IQuerySession _session;

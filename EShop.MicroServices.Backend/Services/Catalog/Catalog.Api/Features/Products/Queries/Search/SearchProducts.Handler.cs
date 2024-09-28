@@ -8,9 +8,9 @@ namespace Catalog.Api.Features.Products.Queries.Search
 	{
 		private readonly IQuerySession _dbSession;
 
-		public SearchProductsHandler(IDocumentSession dbSession)
+		public SearchProductsHandler(IDocumentStore store)
 		{
-			_dbSession = dbSession;
+			_dbSession = store.QuerySession();
 		}
 
 		public async Task<SearchProductsEntity[]> Handle(SearchProducts request, CancellationToken cancellationToken)

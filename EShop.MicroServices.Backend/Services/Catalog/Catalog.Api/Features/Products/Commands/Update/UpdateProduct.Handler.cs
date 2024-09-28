@@ -11,9 +11,9 @@ namespace Catalog.Api.Features.Products.Commands.Update
 		private readonly IDocumentSession _dbSession;
 		private readonly ILogger<UpdateProductHandler> _logger;
 
-		public UpdateProductHandler(IDocumentSession dbSession, ILogger<UpdateProductHandler> logger)
+		public UpdateProductHandler(IDocumentStore store, ILogger<UpdateProductHandler> logger)
 		{
-			_dbSession = dbSession;
+			_dbSession = store.LightweightSession();
 			_logger = logger;
 		}
 

@@ -9,9 +9,9 @@ namespace Catalog.Api.Features.Products.Commands.Create
 	{
 		private readonly IDocumentSession _dbSession;
 
-		public CreateProductHandler(IDocumentSession dbSession)
+		public CreateProductHandler(IDocumentStore store)
 		{
-			_dbSession = dbSession;
+			_dbSession = store.LightweightSession();
 		}
 
 		public async Task<Unit> Handle(CreateProduct request, CancellationToken cancellationToken)

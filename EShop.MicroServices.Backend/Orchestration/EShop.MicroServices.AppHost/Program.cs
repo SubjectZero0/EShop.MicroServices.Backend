@@ -5,6 +5,7 @@ var catalogDb = builder.AddPostgres("postgres-eshop")
 	.AddDatabase("CatalogDb", "CatalogDb");
 
 builder.AddProject<Projects.Catalog_Api>("catalog-api")
-	.WithReference(catalogDb);
+	.WithReference(catalogDb)
+	.WithReplicas(2);
 
 builder.Build().Run();

@@ -18,5 +18,4 @@
     <ProjectReference Include="..\..\..\Services.Shared\Services.Shared\Services.Shared.csproj" />
     <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
   </ItemGroup>
-
 </Project>

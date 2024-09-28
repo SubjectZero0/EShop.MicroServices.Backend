@@ -1,41 +1,41 @@
-using System.Text.Json;
 using Basket.Domain.Aggregates.ShoppingCarts;
 using Marten;
-using Microsoft.Extensions.Caching.Distributed;
 using Services.Shared.Storage;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace Basket.Api.Services;
 
 internal class ShoppingCartStorage : IStorage<ShoppingCart>
 {
-    private readonly IDistributedCache _cache;
-    private readonly IDocumentSession _session;
+	private readonly IDatabase _cache;
+	private readonly IDocumentSession _session;
 
-    public ShoppingCartStorage(IDistributedCache cache, IDocumentSession session)
-    {
-        _cache = cache;
-        _session = session;
-    }
+	public ShoppingCartStorage(IDatabase cache, IDocumentStore store)
+	{
+		_cache = cache;
+		_session = store.LightweightSession();
+	}
 
-    public async Task Store(ShoppingCart entity)
-    {
-        var compositeKey = entity.UserName + "-" + $"{entity.Id}";
-        var value = JsonSerializer.Serialize(entity);
-        
-        _session.Store(entity);
-        await _session.SaveChangesAsync();
+	public async Task Store(ShoppingCart entity)
+	{
+		_session.Store(entity);
+		await _session.SaveChangesAsync();
+		await SetToCache(entity);
+	}
 
-        await _cache.SetStringAsync(compositeKey, value);
-    }
+	public async Task StoreUpdate(ShoppingCart entity)
+	{
+		_session.Update(entity);
+		await _session.SaveChangesAsync();
+		await SetToCache(entity);
+	}
 
-    public async Task StoreUpdate(ShoppingCart entity)
-    {
-        var compositeKey = entity.UserName + "-" + $"{entity.Id}";
-        var value = JsonSerializer.Serialize(entity);
-        
-        _session.Update(entity);
-        await _session.SaveChangesAsync();
+	private async Task SetToCache(ShoppingCart entity)
+	{
+		var compositeKey = string.Concat(entity.UserName, "-", entity.Id);
+		var value = JsonSerializer.Serialize(entity);
 
-        await _cache.SetStringAsync(compositeKey, value);
-    }
+		await _cache.StringSetAsync(key: compositeKey, value: value);
+	}
 }

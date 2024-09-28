@@ -1,143 +1,81 @@
-using System.Text.Json;
-using Basket.Api.Constants;
 using Basket.Api.Features.ShoppingCarts.Queries.Search;
 using Basket.Domain.Aggregates.ShoppingCarts;
 using Marten;
-using Microsoft.Extensions.Caching.Distributed;
 using Services.Shared.Retrievals;
 using StackExchange.Redis;
+using System.Text.Json;
 
 namespace Basket.Api.Services;
 
-internal class ShoppingCartRetrieval : IRetrieval<string, ShoppingCartEntity[]>
+internal class ShoppingCartRetrieval : IRetrieval<string, ShoppingCartEntity>
 {
-    private readonly IDistributedCache _cache;
-    private readonly IQuerySession _session;
-    private readonly RedisKeyScanner _scanner;
-    private readonly ILogger<ShoppingCartRetrieval> _logger;
+	private readonly IDatabase _cache;
+	private readonly IQuerySession _session;
+	private readonly ILogger<ShoppingCartRetrieval> _logger;
+	private readonly JsonSerializerOptions _jsonOptions;
 
-    private static JsonSerializerOptions DeserializerOptions()
-    {
-        return new JsonSerializerOptions()
-        {
-            MaxDepth = 3,
-            PropertyNameCaseInsensitive = true
-        };
-    }
-    public ShoppingCartRetrieval(IDistributedCache cache, IQuerySession session, RedisKeyScanner scanner, ILogger<ShoppingCartRetrieval> logger)
-    {
-        _cache = cache;
-        _session = session;
-        _scanner = scanner;
-        _logger = logger;
-    }
-    
-    public async Task<ShoppingCartEntity[]> TryRetrieve(string searchParameter)
-    {
-        if (searchParameter != UserNames.DefaultUser)
-            return await RetrieveUserCart(searchParameter);
+	public ShoppingCartRetrieval(IDocumentStore store, ILogger<ShoppingCartRetrieval> logger, IDatabase cache)
+	{
+		_session = store.QuerySession();
+		_logger = logger;
+		_cache = cache;
 
-        return await RetrieveDefaultUserCarts();
-    }
+		_jsonOptions = new JsonSerializerOptions()
+		{
+			MaxDepth = 3,
+			PropertyNameCaseInsensitive = true
+		};
+	}
 
-    public async Task<ShoppingCartEntity[]> RetrieveBatch(string[] searchParameters)
-    {
-        List<ShoppingCartEntity> entities = new();
-        foreach (var searchParameter in searchParameters)
-        {
-            var retrievedEntities = await TryRetrieve(searchParameter);
-            entities.AddRange(retrievedEntities);
-        }
+	public async Task<ShoppingCartEntity?> TryRetrieve(string searchParameter)
+	{
+		try
+		{
+			var redisValue = await _cache.StringGetAsync(searchParameter);
+			var cachedCartString = redisValue.HasValue ? redisValue.ToString() : null;
 
-        return entities.ToArray();
-    }
-    
-    private async Task<ShoppingCartEntity[]> RetrieveDefaultUserCarts()
-    {
-        try
-        {
-            var cachedCartStrings = await _scanner.GetRedisStrings(UserNames.DefaultUser);
-            return GetCachedEntities(cachedCartStrings);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Something went wrong while trying to retrieve Shopping carts from cache for DefaultUser, Message:{message}", ex.Message);
-        }
+			if (cachedCartString is null)
+				return null;
 
-        var dbCarts = await _session
-            .Query<ShoppingCart>()
-            .Where(x => x.UserName == UserNames.DefaultUser)
-            .ToListAsync();
+			var cachedEntity = JsonSerializer.Deserialize<ShoppingCartEntity>(cachedCartString, _jsonOptions);
 
-        
-        return dbCarts.IsEmpty()
-            ? Array.Empty<ShoppingCartEntity>()
-            : dbCarts
-                .Select(dbCart => new ShoppingCartEntity(
-                    Id: dbCart.Id,
-                    UserName: dbCart.UserName,
-                    Items: dbCart.Items,
-                    CreatedAt: dbCart.CreatedAt,
-                    UpdatedAt: dbCart.UpdatedAt,
-                    TotalPrice: dbCart.TotalPrice))
-                .ToArray();
-    }
+			return cachedEntity;
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError("Something went wrong while trying to retrieve Shopping carts from cache for UserName: {username}, Message:{message}", searchParameter, ex.Message);
+		}
 
-    private static ShoppingCartEntity[] GetCachedEntities(string[] cachedCartStrings)
-    {
-        var cachedCartEntities = new List<ShoppingCartEntity>();
+		var userName = searchParameter.Split("-").First();
+		var cartId = Guid.Parse(searchParameter.Split("-").Last());
 
-        foreach (var cachedCartString in cachedCartStrings)
-        {
-            if (string.IsNullOrEmpty(cachedCartString) || string.IsNullOrWhiteSpace(cachedCartString)) 
-                continue;
-                
-            var cachedEntity = GetCachedEntity(cachedCartString);
-                    
-            if (cachedEntity is not null)
-                cachedCartEntities.Add(cachedEntity);
-        }
+		var dbCart = _session
+			.Query<ShoppingCart>()
+			.SingleOrDefault(x => x.UserName == userName && x.Id == cartId);
 
-        return cachedCartEntities.ToArray();
-    }
+		return dbCart is null
+			? null
+			: new ShoppingCartEntity(
+				Id: dbCart.Id,
+				UserName: dbCart.UserName,
+				Items: dbCart.Items,
+				CreatedAt: dbCart.CreatedAt,
+				UpdatedAt: dbCart.UpdatedAt,
+				TotalPrice: dbCart.TotalPrice);
+	}
 
-    private async Task<ShoppingCartEntity[]> RetrieveUserCart(string searchParameter)
-    {
-        try
-        {
-            var cachedCartString = await _cache.GetStringAsync(searchParameter) ?? string.Empty;
+	public async Task<ShoppingCartEntity[]> RetrieveBatch(string[] searchParameters)
+	{
+		List<ShoppingCartEntity> entities = new();
 
-            if (!string.IsNullOrEmpty(cachedCartString))
-            {
-                var cachedEntity = GetCachedEntity(cachedCartString);
+		foreach (var searchParameter in searchParameters)
+		{
+			var retrievedEntity = await TryRetrieve(searchParameter);
 
-                if (cachedEntity is not null)
-                    return [cachedEntity];
-            }
-        }
-        catch(Exception ex)
-        {
-            _logger.LogError("Something went wrong while trying to retrieve Shopping carts from cache for UserName: {username}, Message:{message}", searchParameter, ex.Message);
-        }
-        
-        var dbCart = _session
-            .Query<ShoppingCart>()
-            .SingleOrDefault(x => x.UserName == searchParameter);
-        
-        return dbCart is null
-            ? Array.Empty<ShoppingCartEntity>()
-            :
-            [
-                new ShoppingCartEntity(
-                    Id: dbCart.Id,
-                    UserName: dbCart.UserName,
-                    Items: dbCart.Items,
-                    CreatedAt: dbCart.CreatedAt,
-                    UpdatedAt: dbCart.UpdatedAt,
-                    TotalPrice: dbCart.TotalPrice)
-            ];
-    }
-    
-    private static ShoppingCartEntity? GetCachedEntity(string cachedCartString)
-        => JsonSerializer.Deserialize<ShoppingCartEntity>(cachedCartString, DeserializerOptions());
+			if (retrievedEntity is not null)
+				entities.Add(retrievedEntity);
+		}
+
+		return entities.ToArray();
+	}
 }

@@ -7,23 +7,23 @@ namespace Basket.Api.Features.ShoppingCarts.Commands.Create;
 
 internal class CreateShoppingCartHandler : ICommandHandler<CreateShoppingCart, Unit>
 {
-    private readonly IStorage<ShoppingCart> _storage;
+	private readonly IStorage<ShoppingCart> _storage;
 
-    public CreateShoppingCartHandler(IStorage<ShoppingCart> storage)
-    {
-        _storage = storage;
-    }
+	public CreateShoppingCartHandler(IStorage<ShoppingCart> storage)
+	{
+		_storage = storage;
+	}
 
-    public async Task<Unit> Handle(CreateShoppingCart request, CancellationToken cancellationToken)
-    {
-        var newEmptyShoppingCart = ShoppingCart.CreateNew(
-            id: request.Id ?? Guid.NewGuid(),
-            userName: request.UserName,
-            items: new List<ShoppingCartItem>(),
-            timeStamp: DateTime.UtcNow);
+	public async Task<Unit> Handle(CreateShoppingCart request, CancellationToken cancellationToken)
+	{
+		var newEmptyShoppingCart = ShoppingCart.CreateNew(
+			id: request.Id ?? Guid.NewGuid(),
+			userName: request.UserName,
+			items: new List<ShoppingCartItem>(),
+			timeStamp: DateTime.UtcNow);
 
-        await _storage.Store(newEmptyShoppingCart);
+		await _storage.Store(newEmptyShoppingCart);
 
-        return Unit.Value;
-    }
+		return Unit.Value;
+	}
 }

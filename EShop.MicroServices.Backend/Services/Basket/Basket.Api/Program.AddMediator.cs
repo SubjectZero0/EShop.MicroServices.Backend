@@ -12,16 +12,16 @@ namespace Basket.Api
 	{
 		public static WebApplicationBuilder AddMediator(this WebApplicationBuilder builder)
 		{
-            builder.Services.AddMediatR(config =>
-            {
-	            var assembly = Assembly.GetExecutingAssembly();
+			builder.Services.AddMediatR(config =>
+			{
+				var assembly = Assembly.GetExecutingAssembly();
 				config.RegisterServicesFromAssembly(assembly: assembly);
-				config.AddOpenBehavior(typeof(ValidationDecorator<,>), ServiceLifetime.Transient);
-				config.AddOpenBehavior(typeof(LoggingDecorator<,>), ServiceLifetime.Transient);
+				config.AddOpenBehavior(typeof(ValidationDecorator<,>), ServiceLifetime.Singleton);
+				config.AddOpenBehavior(typeof(LoggingDecorator<,>), ServiceLifetime.Singleton);
 
-				config.Lifetime = ServiceLifetime.Transient;
+				config.Lifetime = ServiceLifetime.Singleton;
 			});
-			
+
 			return builder;
 		}
 	}

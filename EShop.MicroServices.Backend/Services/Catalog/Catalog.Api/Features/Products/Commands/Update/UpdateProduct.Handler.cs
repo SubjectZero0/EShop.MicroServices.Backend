@@ -1,19 +1,19 @@
-﻿using Catalog.Domain.Aggregates.Product;
+﻿using System.Text.Json;
+using Catalog.Domain.Aggregates.Product;
 using Marten;
 using MediatR;
 using Services.Shared.CQRS;
-using System.Text.Json;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Update
 {
 	internal class UpdateProductHandler : ICommandHandler<UpdateProduct, Unit>
 	{
 		private readonly IDocumentSession _dbSession;
 		private readonly ILogger<UpdateProductHandler> _logger;
 
-		public UpdateProductHandler(IDocumentSession dbSession, ILogger<UpdateProductHandler> logger)
+		public UpdateProductHandler(IDocumentStore store, ILogger<UpdateProductHandler> logger)
 		{
-			_dbSession = dbSession;
+			_dbSession = store.LightweightSession();
 			_logger = logger;
 		}
 

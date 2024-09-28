@@ -1,6 +1,6 @@
 ﻿using Services.Shared.CQRS;
 
-namespace Catalog.Api.Features.Products.Queries
+namespace Catalog.Api.Features.Products.Queries.Search
 {
 	public record SearchProducts(Guid? Id = null, string? Name = null, decimal? Price = null, string[]? Categories = null) : IQuery<SearchProductsEntity[]>;
 

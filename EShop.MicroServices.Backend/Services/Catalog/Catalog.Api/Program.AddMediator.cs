@@ -1,6 +1,5 @@
-﻿using MediatR;
+﻿using System.Reflection;
 using Services.Shared.Decorators;
-using System.Reflection;
 
 namespace Catalog.Api
 {
@@ -11,10 +10,10 @@ namespace Catalog.Api
 			builder.Services.AddMediatR(config =>
 			{
 				config.RegisterServicesFromAssembly(assembly: Assembly.GetExecutingAssembly());
-				config.AddOpenBehavior(typeof(ValidationDecorator<,>));
-				config.AddOpenBehavior(typeof(LoggingDecorator<,>));
+				config.AddOpenBehavior(typeof(ValidationDecorator<,>), ServiceLifetime.Singleton);
+				config.AddOpenBehavior(typeof(LoggingDecorator<,>), ServiceLifetime.Singleton);
 
-				config.Lifetime = ServiceLifetime.Transient;
+				config.Lifetime = ServiceLifetime.Singleton;
 			});
 
 			return builder;

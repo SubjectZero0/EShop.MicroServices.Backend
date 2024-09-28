@@ -3,16 +3,16 @@ using Services.Shared.CQRS;
 using MediatR;
 using Marten;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Delete
 {
 	internal class DeleteProductHandler : ICommandHandler<DeleteProduct, Unit>
 	{
 		private readonly IDocumentSession _dbSession;
 		private readonly ILogger<DeleteProductHandler> _logger;
 
-		public DeleteProductHandler(IDocumentSession dbSession, ILogger<DeleteProductHandler> logger)
+		public DeleteProductHandler(IDocumentStore store, ILogger<DeleteProductHandler> logger)
 		{
-			_dbSession = dbSession;
+			_dbSession = store.LightweightSession();
 			_logger = logger;
 		}
 

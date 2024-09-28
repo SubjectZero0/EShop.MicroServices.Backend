@@ -10,12 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.0.1" />
-    <PackageReference Include="Aspire.Npgsql" Version="8.0.1" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.1" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.2.1" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="8.2.1" />
+    <PackageReference Include="Aspire.Npgsql" Version="8.2.1" />
+    <PackageReference Include="Aspire.StackExchange.Redis" Version="8.2.1" />
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.2.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Services\Basket\Basket.Api\Basket.Api.csproj" />
     <ProjectReference Include="..\..\Services\Catalog\Catalog.Api\Catalog.Api.csproj" />
   </ItemGroup>
 

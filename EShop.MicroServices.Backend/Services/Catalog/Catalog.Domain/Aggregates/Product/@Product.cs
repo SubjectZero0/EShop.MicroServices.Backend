@@ -19,12 +19,11 @@ namespace Catalog.Domain.Aggregates.Product
 		[JsonInclude]
 		public List<string> Categories { get; private set; }
 
-		public Product()
+		public Product() : base(default)
 		{ }
 
-		public Product(Guid id, string name, string description, string imageFile, decimal price, string[] categories)
+		public Product(Guid id, string name, string description, string imageFile, decimal price, string[] categories) : base(id)
 		{
-			Id = id;
 			Name = name;
 			Description = description;
 			ImageFile = imageFile;

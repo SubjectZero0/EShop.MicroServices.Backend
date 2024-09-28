@@ -1,15 +1,15 @@
-﻿using Carter;
-using Catalog.Api.Features.Products.Commands;
+﻿using Catalog.Api.Features.Products.Commands.Create;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Api.Features.Products
 {
-	internal partial class ProductModule : ICarterModule
+	internal partial class ProductModule
 	{
 		private void AddCreateProductEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapPost("/products/create", async ([FromBody] CreateProduct request, ISender sender) =>
+			app.MapPost("/products/create", async Task<IResult> ([FromBody] CreateProduct request, ISender sender) =>
 			{
 				await sender.Send(request);
 

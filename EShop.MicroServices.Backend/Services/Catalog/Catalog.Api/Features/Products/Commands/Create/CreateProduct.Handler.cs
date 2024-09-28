@@ -3,15 +3,15 @@ using Marten;
 using MediatR;
 using Services.Shared.CQRS;
 
-namespace Catalog.Api.Features.Products.Commands
+namespace Catalog.Api.Features.Products.Commands.Create
 {
 	internal class CreateProductHandler : ICommandHandler<CreateProduct, Unit>
 	{
 		private readonly IDocumentSession _dbSession;
 
-		public CreateProductHandler(IDocumentSession dbSession)
+		public CreateProductHandler(IDocumentStore store)
 		{
-			_dbSession = dbSession;
+			_dbSession = store.LightweightSession();
 		}
 
 		public async Task<Unit> Handle(CreateProduct request, CancellationToken cancellationToken)

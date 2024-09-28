@@ -8,7 +8,7 @@ namespace Catalog.Api.Features.Products
 	{
 		private void AddUpdateProductEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapPost("/products/update", async ([FromBody] UpdateProduct request, ISender sender) =>
+			app.MapPost("/products/update", async Task<IResult> ([FromBody] UpdateProduct request, ISender sender) =>
 			{
 				await sender.Send(request);
 

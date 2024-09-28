@@ -1,5 +1,6 @@
 ﻿using Catalog.Api.Features.Products.Queries.Search;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.Api.Features.Products
 {
@@ -7,7 +8,7 @@ namespace Catalog.Api.Features.Products
 	{
 		private void AddSearchProductsEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapGet("/products/search", async (Guid? id, string? name, string[]? categories, decimal? price, ISender sender) =>
+			app.MapGet("/products/search", async Task<IResult> (Guid? id, string? name, string[]? categories, decimal? price, ISender sender) =>
 			{
 				var query = new SearchProducts(
 					Id: id,

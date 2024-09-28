@@ -1,4 +1,4 @@
-﻿using Catalog.Api.Features.Products.Commands;
+﻿using Catalog.Api.Features.Products.Commands.Delete;
 using MediatR;
 
 namespace Catalog.Api.Features.Products
@@ -7,7 +7,7 @@ namespace Catalog.Api.Features.Products
 	{
 		private void AddDeleteProductsEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapDelete("/products/delete", async (Guid[] ids, ISender sender) =>
+			app.MapDelete("/products/delete", async Task<IResult> (Guid[] ids, ISender sender) =>
 			{
 				foreach (var id in ids)
 				{

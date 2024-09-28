@@ -15,7 +15,7 @@ namespace Catalog.Api
 				.Get<SqlConnectionConfiguration>()
 				?? throw new ArgumentNullException(nameof(SqlConnectionConfiguration));
 
-			var connectionString = sqlConfiguration.ConnectionString ?? throw new ArgumentNullException("ConnectionString");
+			var connectionString = sqlConfiguration.ConnectionString ?? throw new Exception($"{nameof(SqlConnectionConfiguration)} not found.");
 
 			builder.Services.AddMarten(cfg =>
 			{

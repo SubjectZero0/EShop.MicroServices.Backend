@@ -31,13 +31,14 @@ namespace Catalog.Api.Features.Products.Queries
 
 			var results = await query.ToListAsync(cancellationToken);
 
-			var entities = results.Select(x => new SearchProductsEntity(
-				Id: x.Id,
-				Name: x.Name,
-				Description: x.Description,
-				ImageFile: x.ImageFile,
-				Price: x.Price,
-				Categories: x.Categories));
+			var entities = results
+				.Select(x => new SearchProductsEntity(
+					Id: x.Id,
+					Name: x.Name,
+					Description: x.Description,
+					ImageFile: x.ImageFile,
+					Price: x.Price,
+					Categories: x.Categories));
 
 			return entities.ToArray();
 		}

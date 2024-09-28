@@ -1,7 +1,7 @@
 ﻿using Catalog.Domain.Aggregates.Product;
-using Marten;
-using MediatR;
 using Services.Shared.CQRS;
+using MediatR;
+using Marten;
 
 namespace Catalog.Api.Features.Products.Commands
 {
@@ -28,6 +28,8 @@ namespace Catalog.Api.Features.Products.Commands
 
 			_dbSession.Delete(product);
 			await _dbSession.SaveChangesAsync();
+
+			_logger.LogInformation("Product with Id: {id} deleted.", request.Id);
 
 			return Unit.Value;
 		}

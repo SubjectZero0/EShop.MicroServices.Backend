@@ -13,7 +13,7 @@ namespace Catalog.Api
 				.Configuration
 				.GetSection(nameof(SqlConnectionConfiguration))
 				.Get<SqlConnectionConfiguration>()
-				?? throw new ArgumentNullException(nameof(SqlConnectionConfiguration));
+				?? throw new Exception($"{nameof(SqlConnectionConfiguration)} not found.");
 
 			var connectionString = sqlConfiguration.ConnectionString ?? throw new Exception($"{nameof(SqlConnectionConfiguration)} not found.");
 

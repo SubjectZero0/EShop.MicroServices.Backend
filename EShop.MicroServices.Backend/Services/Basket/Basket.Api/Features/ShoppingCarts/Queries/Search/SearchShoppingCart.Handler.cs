@@ -18,8 +18,8 @@ internal class SearchShoppingCartHandler : IQueryHandler<SearchShoppingCart, Sho
 		if (request.UserName == UserNames.DefaultUser && request.CartId is null)
 			return null;
 		else if (request.UserName == UserNames.DefaultUser && request.CartId is not null)
-			return await _retrieval.TryRetrieve(string.Concat(UserNames.DefaultUser, "-", request.CartId));
+			return await _retrieval.TryRetrieve(string.Concat(UserNames.DefaultUser, "-", request.CartId), cancellationToken);
 		else
-			return await _retrieval.TryRetrieve(string.Concat(request.UserName, "-", request.CartId));
+			return await _retrieval.TryRetrieve(string.Concat(request.UserName, "-", request.CartId), cancellationToken);
 	}
 }

@@ -1,10 +1,5 @@
-﻿using System.Reflection;
-using Basket.Api.Features.ShoppingCarts.Queries.Search;
-using Basket.Api.Services;
-using Basket.Domain.Aggregates.ShoppingCarts;
-using Services.Shared.Decorators;
-using Services.Shared.Retrievals;
-using Services.Shared.Storage;
+﻿using Services.Shared.Decorators;
+using System.Reflection;
 
 namespace Basket.Api
 {

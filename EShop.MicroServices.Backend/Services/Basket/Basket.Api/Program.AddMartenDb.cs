@@ -1,7 +1,7 @@
 ﻿using Marten;
 using System.Text.Json;
 using Basket.Domain.Aggregates.ShoppingCarts;
-using static Basket.Api.Configurations.Configurations;
+using Basket.Api.Configurations;
 
 namespace Basket.Api
 {

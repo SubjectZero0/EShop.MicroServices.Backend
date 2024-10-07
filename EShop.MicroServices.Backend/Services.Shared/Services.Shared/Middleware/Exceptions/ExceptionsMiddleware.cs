@@ -32,6 +32,7 @@ namespace Services.Shared.Middleware.Exceptions
 					ErrorMessage = "An error occurred. Please try again later.",
 					ErrorCode = 500
 				};
+
 				await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
 			}
 		}

@@ -1,13 +1,14 @@
+using Basket.Api.Configurations;
 using Basket.Api.Features.ShoppingCarts.Queries.Search;
-using Basket.Api.Services;
+using Basket.Api.Infrastructure;
 using Basket.Domain.Aggregates.ShoppingCarts;
-using RedLockNet.SERedis;
 using RedLockNet;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
+using Services.Shared.Caching;
 using Services.Shared.Retrievals;
 using Services.Shared.Storage;
 using StackExchange.Redis;
-using RedLockNet.SERedis.Configuration;
-using Services.Shared.Extensions;
 
 namespace Basket.Api;
 
@@ -17,26 +18,21 @@ public static partial class Program
 	{
 		var redisCacheConfiguration = builder
 			.Configuration
-			.GetSection(nameof(Configurations.Configurations.RedisCacheConfiguration))
-			.Get<Configurations.Configurations.RedisCacheConfiguration>() ?? throw new Exception("nameof(Configurations.Configurations.RedisCacheConfiguration) not found.");
+			.GetSection(nameof(RedisCacheConfiguration))
+			.Get<RedisCacheConfiguration>() ?? throw new Exception("nameof(Configurations.Configurations.RedisCacheConfiguration) not found.");
 
-		var configurationOptions = ConfigurationOptions.Parse(redisCacheConfiguration.ConnectionString);
-		configurationOptions.AllowAdmin = true;
-		configurationOptions.ConnectRetry = 5;
-		configurationOptions.ConnectTimeout = 5000;
-		configurationOptions.SyncTimeout = 10000;
-		configurationOptions.AsyncTimeout = 10000;
-		configurationOptions.AbortOnConnectFail = false;
-		configurationOptions.KeepAlive = 10;
-		configurationOptions.ReconnectRetryPolicy = new ExponentialRetry(5000);
-		configurationOptions.AbortOnConnectFail = false;
+		var redisConnectionString = redisCacheConfiguration.ConnectionString;
+
+		var configurationOptions = ConfigurationOptions.Parse(redisConnectionString);
+		configurationOptions.AllowAdmin = redisCacheConfiguration.AllowAdmin;
+		configurationOptions.DefaultDatabase = redisCacheConfiguration.DefaultDb;
 
 		builder.Services.AddStackExchangeRedisCache(options =>
 		{
 			options.ConfigurationOptions = configurationOptions;
 		});
 
-		builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisCacheConfiguration.ConnectionString));
+		builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConnectionString));
 
 		builder.Services.AddSingleton(sp =>
 		{
@@ -49,6 +45,9 @@ public static partial class Program
 			var connectionMultiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
 			return RedLockFactory.Create(connectionMultiplexer.GetEndPoints().Select(ep => new RedLockEndPoint(ep)).ToList());
 		});
+
+		builder.Services.AddSingleton<ICachingProvider<string, ShoppingCart>, RedisCachingProvider<string, ShoppingCart>>();
+		builder.Services.AddSingleton<ICachingProvider<string, ShoppingCartEntity>, RedisCachingProvider<string, ShoppingCartEntity>>();
 
 		builder.Services.AddSingleton<IRetrieval<string, ShoppingCartEntity>, ShoppingCartRetrieval>();
 		builder.Services.AddSingleton<IStorage<ShoppingCart>, ShoppingCartStorage>();

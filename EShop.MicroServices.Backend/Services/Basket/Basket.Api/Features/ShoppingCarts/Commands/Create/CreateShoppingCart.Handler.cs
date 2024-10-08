@@ -22,7 +22,7 @@ internal class CreateShoppingCartHandler : ICommandHandler<CreateShoppingCart, U
 			items: new List<ShoppingCartItem>(),
 			timeStamp: DateTime.UtcNow);
 
-		await _storage.Store(newEmptyShoppingCart);
+		await _storage.StoreNew(newEmptyShoppingCart, cancellationToken);
 
 		return Unit.Value;
 	}

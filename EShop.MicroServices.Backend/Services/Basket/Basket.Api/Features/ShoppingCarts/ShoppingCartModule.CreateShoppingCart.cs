@@ -9,9 +9,9 @@ internal partial class ShoppingCartModule
 {
 	private void AddCreateShoppingCartEndpoint(IEndpointRouteBuilder app)
 	{
-		app.MapPost("/cart/create", async Task<IResult> ([FromBody] SearchShoppingCart request, ISender sender) =>
+		app.MapPost("/cart/create", async Task<IResult> ([FromBody] SearchShoppingCart request, ISender sender, CancellationToken ct) =>
 			{
-				var existingCart = await sender.Send(request);
+				var existingCart = await sender.Send(request, ct);
 
 				if (existingCart is not null)
 					return Results.Ok();

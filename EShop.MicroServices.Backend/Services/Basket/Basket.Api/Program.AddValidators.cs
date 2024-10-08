@@ -7,7 +7,7 @@ namespace Basket.Api
 	{
 		public static WebApplicationBuilder AddValidators(this WebApplicationBuilder builder)
 		{
-			builder.Services.AddValidatorsFromAssembly(assembly: Assembly.GetExecutingAssembly(), lifetime: ServiceLifetime.Transient);
+			builder.Services.AddValidatorsFromAssembly(assembly: Assembly.GetExecutingAssembly(), lifetime: ServiceLifetime.Singleton);
 
 			return builder;
 		}

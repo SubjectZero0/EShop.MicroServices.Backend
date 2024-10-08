@@ -1,17 +1,14 @@
 ﻿namespace Basket.Api.Configurations
 {
-	public class Configurations
+	public class SqlConnectionConfiguration
 	{
-		public class SqlConnectionConfiguration
-		{
-			public string? ConnectionString { get; init; }
-		}
-		
-		public class RedisCacheConfiguration
-		{
-			public string Host { get; init; }
-			public string Port { get; init; }
-			public string ConnectionString { get; init; }
-		}
+		public string? ConnectionString { get; init; }
+	}
+
+	public class RedisCacheConfiguration
+	{
+		public int DefaultDb { get; set; }
+		public bool AllowAdmin { get; set; }
+		public string ConnectionString { get; set; }
 	}
 }

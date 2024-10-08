@@ -30,17 +30,17 @@ namespace Services.Shared.Caching
 
 		public async Task SetToCache(TKey key, TEntity entity)
 		{
-			var redisKey = new RedisKey(key.ToString());
-
-			await using var redLock = await _redLockFactory.CreateLockAsync(
-				resource: redisKey,
-				expiryTime: TimeSpan.FromSeconds(10),
-				waitTime: TimeSpan.FromSeconds(5),
-				retryTime: TimeSpan.FromSeconds(1));
-
-			if (redLock.IsAcquired)
+			try
 			{
-				try
+				var redisKey = new RedisKey(key.ToString());
+
+				await using var redLock = await _redLockFactory.CreateLockAsync(
+					resource: redisKey,
+					expiryTime: TimeSpan.FromSeconds(10),
+					waitTime: TimeSpan.FromSeconds(5),
+					retryTime: TimeSpan.FromSeconds(1));
+
+				if (redLock.IsAcquired)
 				{
 					var value = JsonSerializer.Serialize(entity);
 
@@ -49,28 +49,33 @@ namespace Services.Shared.Caching
 						value: value,
 						expiry: TimeSpan.FromHours(3));
 				}
-				catch (Exception ex)
+				else
 				{
-					_logger.LogError("Something went wrong while trying to store entity to cache for Key: {key}, Message:{message}", redisKey, ex.Message);
+					_logger.LogWarning("Could not acquire a lock for Key: {key}.", redisKey);
 				}
 			}
-			else
-				_logger.LogWarning("Could not acquire a lock for Key: {key}.", redisKey);
+			catch (Exception ex)
+			{
+				_logger
+					.LogError("Something went wrong while trying to store entity to cache for Key: {key}, Message:{message}", key, ex.Message);
+
+				await _cache.KeyDeleteAsync(key.ToString());
+			}
 		}
 
 		public async Task<TEntity?> TryGetFromCache(TKey key)
 		{
-			var redisKey = new RedisKey(key.ToString());
-
-			await using var redLock = await _redLockFactory.CreateLockAsync(
-			resource: redisKey,
-			expiryTime: TimeSpan.FromSeconds(10),
-			waitTime: TimeSpan.FromSeconds(5),
-			retryTime: TimeSpan.FromSeconds(1));
-
-			if (redLock.IsAcquired)
+			try
 			{
-				try
+				var redisKey = new RedisKey(key.ToString());
+
+				await using var redLock = await _redLockFactory.CreateLockAsync(
+				resource: redisKey,
+				expiryTime: TimeSpan.FromSeconds(10),
+				waitTime: TimeSpan.FromSeconds(5),
+				retryTime: TimeSpan.FromSeconds(1));
+
+				if (redLock.IsAcquired)
 				{
 					var redisValue = await _cache.StringGetAsync(redisKey);
 
@@ -78,15 +83,15 @@ namespace Services.Shared.Caching
 						? JsonSerializer.Deserialize<TEntity?>(redisValue.ToString(), _jsonOptions)
 						: null;
 				}
-				catch (Exception ex)
+				else
 				{
-					_logger.LogError("Something went wrong while trying to retrieve entity from cache for Key: {key}, Message:{message}", redisKey, ex.Message);
+					_logger.LogWarning("Could not acquire a lock for Key: {key}.", redisKey);
 					return null;
 				}
 			}
-			else
+			catch (Exception ex)
 			{
-				_logger.LogWarning("Could not acquire a lock for Key: {key}.", redisKey);
+				_logger.LogError("Something went wrong while trying to retrieve entity from cache for Key: {key}, Message:{message}", key.ToString(), ex.Message);
 				return null;
 			}
 		}

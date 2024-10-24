@@ -16,6 +16,9 @@ internal class CreateShoppingCartHandler : ICommandHandler<CreateShoppingCart, U
 
 	public async Task<Unit> Handle(CreateShoppingCart request, CancellationToken cancellationToken)
 	{
+		if (cancellationToken.IsCancellationRequested)
+			return Unit.Value;
+		
 		var newEmptyShoppingCart = ShoppingCart.CreateNew(
 			id: request.Id ?? Guid.NewGuid(),
 			userName: request.UserName,

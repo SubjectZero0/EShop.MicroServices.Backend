@@ -15,11 +15,9 @@ internal class SearchShoppingCartHandler : IQueryHandler<SearchShoppingCart, Sho
 
 	public async Task<ShoppingCartEntity?> Handle(SearchShoppingCart request, CancellationToken cancellationToken)
 	{
-		if (request.UserName == UserNames.DefaultUser && request.CartId is null)
+		if (request is { UserName: UserNames.DefaultUser, CartId: null })
 			return null;
-		else if (request.UserName == UserNames.DefaultUser && request.CartId is not null)
-			return await _retrieval.TryRetrieve(string.Concat(UserNames.DefaultUser, Separators.RedisKey, request.CartId), cancellationToken);
-		else
-			return await _retrieval.TryRetrieve(string.Concat(request.UserName, Separators.RedisKey, request.CartId), cancellationToken);
+		
+		return await _retrieval.TryRetrieve(string.Concat(request.UserName, Separators.RedisKey, request.CartId), cancellationToken);
 	}
 }

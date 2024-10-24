@@ -28,7 +28,7 @@ internal class ShoppingCartStorage : IStorage<ShoppingCart>
 
 		try
 		{
-			_session.Store(entity);
+			_session.Insert(entity);
 			await _session.SaveChangesAsync(ct);
 		}
 		catch (Exception ex)

@@ -24,7 +24,7 @@ namespace Catalog.Api.Features.Products.Commands.Update
 				.NotEmpty().When(x => x.ImageFile is not null).WithMessage("If Image file is included, it cannot be empty.");
 
 			RuleFor(x => x.Price)
-				.Must(price => IsMoney(price)).When(x => x.Price is not null).WithMessage("If Price is included, it must have two decimal places.");
+				.Must(IsMoney).When(x => x.Price is not null).WithMessage("If Price is included, it must have two decimal places.");
 		}
 
 		private static bool IsMoney(decimal? price)

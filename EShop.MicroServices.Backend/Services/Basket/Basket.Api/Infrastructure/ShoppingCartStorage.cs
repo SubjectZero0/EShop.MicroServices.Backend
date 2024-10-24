@@ -33,7 +33,7 @@ internal class ShoppingCartStorage : IStorage<ShoppingCart>
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError("ShoppingCart Entity with Id: {Id} cound not be stored. {Message}, {StackTrace}", entity.Id, ex.Message, ex.StackTrace);
+			_logger.LogError("ShoppingCart Entity with Id: {Id} could not be stored. {Message}, {StackTrace}", entity.Id, ex.Message, ex.StackTrace);
 			return;
 		}
 
@@ -54,7 +54,7 @@ internal class ShoppingCartStorage : IStorage<ShoppingCart>
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError("ShoppingCart Entity with Id: {Id} cound not be updated. {Message}, {StackTrace}", entity.Id, ex.Message, ex.StackTrace);
+			_logger.LogError("ShoppingCart Entity with Id: {Id} could not be updated. {Message}, {StackTrace}", entity.Id, ex.Message, ex.StackTrace);
 			return;
 		}
 
